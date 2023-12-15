@@ -1,0 +1,21 @@
+# package directories
+node_modules
+jspm_packages
+
+# Serverless directories
+.serverless
+
+dev.env
+prod.env
+
+.webpack
+
+.env.development
+.env.production
+
+.env.dev
+.env.prod
+
+tests/node_modules
+
+tests/package-lock.json

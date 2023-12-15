@@ -1,0 +1,409 @@
+service: blitz
+app: blitz
+org: roopeshshettyb
+frameworkVersion: "3"
+plugins:
+  # - serverless-bundle
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+custom:
+  nodemon:
+    script: ${self:provider.runtime}
+    ext: js,yaml,yml,json
+    ignore: .git node_modules
+    verbose: true
+  dotenv:
+    path: .env.${opt:stage}
+  basePath: /api/v1
+  serverless-offline:
+    httpPort: 8000
+  cors:
+    origins:
+      - "http://localhost:3000"
+      - "http://localhost:8000"
+      - "https://www.flashpact.in"
+package:
+  individually: true
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  role: ${env:AWS_LAMBDA_ROLE}
+  apiGateway:
+    binaryMediaTypes:
+      - "multipart/form-data"
+
+functions:
+  commonGet:
+    timeout: 30
+    handler: src/common-services/commonHandler.getDataHandler
+    events:
+      - http:
+          path: /common-services/{model}/{id}
+          method: get
+          cors: true
+          request:
+            parameters:
+              querystrings:
+                raw: false
+  commonBulkCreate:
+    timeout: 30
+    handler: src/common-services/commonHandler.bulkCreateRequestHandler
+    events:
+      - http:
+          path: /common-services/{model}/bulk-create
+          method: post
+          cors: true
+  commonDelete:
+    timeout: 30
+    handler: src/common-services/commonHandler.deleteDataHandler
+    events:
+      - http:
+          path: /{model}/{id}
+          method: delete
+          cors: true
+  createUser:
+    timeout: 30
+    handler: src/users/userHandler.createUserHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_USERS}/create
+          method: post
+          cors: true
+  loginUser:
+    timeout: 30
+    handler: src/users/userHandler.loginUserHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_USERS}/login
+          method: post
+          cors: true
+  updateUser:
+    timeout: 30
+    handler: src/users/userHandler.updateUserHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_USERS}/update
+          method: post
+          cors: true
+  createInstitute:
+    timeout: 30
+    handler: src/institutes/instituteHandler.createInstituteHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_INSTITUTES}/create
+          method: post
+          cors: true
+  updateInstitute:
+    timeout: 30
+    handler: src/institutes/instituteHandler.updateInstituteHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_INSTITUTES}/update
+          method: post
+          cors: true
+  createCompany:
+    timeout: 30
+    handler: src/companies/companyHandler.createCompanyHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_COMPANIES}/create
+          method: post
+          cors: true
+  updateCompany:
+    timeout: 30
+    handler: src/companies/companyHandler.updateCompanyHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_COMPANIES}/update
+          method: post
+          cors: true
+  createEligibility:
+    timeout: 30
+    handler: src/eligibilities/eligibilityHandler.createEligibilityHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_ELIGIBILITIES}/create
+          method: post
+          cors: true
+  updateEligibility:
+    timeout: 30
+    handler: src/eligibilities/eligibilityHandler.updateEligibilityHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_ELIGIBILITIES}/update
+          method: post
+          cors: true
+  createQuestion:
+    timeout: 30
+    handler: src/questions/questionHandler.createQuestionHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_QUESTIONS}/create
+          method: post
+          cors: true
+  updateQuestion:
+    timeout: 30
+    handler: src/questions/questionHandler.updateQuestionHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_QUESTIONS}/update
+          method: post
+          cors: true
+  createStage:
+    timeout: 30
+    handler: src/stages/stageHandler.createStageHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_STAGES}/create
+          method: post
+          cors: true
+  updateStage:
+    timeout: 30
+    handler: src/stages/stageHandler.updateStageHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_STAGES}/update
+          method: post
+          cors: true
+  createListing:
+    timeout: 30
+    handler: src/listings/listingHandler.createListingHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_LISTINGS}/create
+          method: post
+          cors: true
+  updateListing:
+    timeout: 30
+    handler: src/listings/listingHandler.updateListingHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_LISTINGS}/update
+          method: post
+          cors: true
+  aspirantCreate:
+    timeout: 30
+    handler: src/aspirants/aspirantHandler.createAspirantHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_ASPIRANTS}/create
+          method: post
+          cors: true
+  aspirantUpdate:
+    timeout: 30
+    handler: src/aspirants/aspirantHandler.updateAspirantHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_ASPIRANTS}/update
+          method: post
+          cors: true
+  gradeCreate:
+    timeout: 30
+    handler: src/grades/gradeHandler.createGradeHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_GRADES}/create
+          method: post
+          cors: true
+  gradeUpdate:
+    timeout: 30
+    handler: src/grades/gradeHandler.updateGradeHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_GRADES}/update
+          method: post
+          cors: true
+  applicationCreate:
+    timeout: 30
+    handler: src/applications/applicationHandler.createApplicationHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_APPLICATIONS}/create
+          method: post
+          cors: true
+  applicationUpdate:
+    timeout: 30
+    handler: src/applications/applicationHandler.updateApplicationHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_APPLICATIONS}/update
+          method: post
+          cors: true
+  bulkApplicationsUpdate:
+    timeout: 30
+    handler: src/applications/applicationHandler.bulkUpdateApplicationsHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_APPLICATIONS}/bulk/update
+          method: post
+          cors: true
+  questionResponseCreate:
+    timeout: 30
+    handler: src/question-responses/question-responseHandler.createQuestionResponseHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_QUESTION_RESPONSES}/create
+          method: post
+          cors: true
+  questionResponseUpdate:
+    timeout: 30
+    handler: src/question-responses/question-responseHandler.updateQuestionResponseHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_QUESTION_RESPONSES}/update
+          method: post
+          cors: true
+  batchingQueueConsumer:
+    timeout: 900
+    handler: src/common-services/commonHandler.batchingQueueConsumerHandler
+    events:
+      - sqs:
+          arn: ${env:BATCHING_QUEUE_ARN}
+          batchSize: 1
+  bulkCreateQueueConsumer:
+    timeout: 900
+    handler: src/common-services/commonHandler.bulkCreateQueueConsumerHandler
+    events:
+      - sqs:
+          arn: ${env:BULK_CREATE_QUEUE_ARN}
+          batchSize: 1
+  sendEmailQueueConsumer:
+    timeout: 900
+    handler: src/common-services/commonHandler.sendEmailQueueConsumerHandler
+    events:
+      - sqs:
+          arn: ${env:SEND_EMAIL_QUEUE_ARN}
+          batchSize: 1
+  bulkCreationFailedRecordsQueueConsumer:
+    timeout: 900
+    handler: src/common-services/commonHandler.bulkCreationFailedRecordsQueueConsumerHandler
+    events:
+      - sqs:
+          arn: ${env:BULK_CREATE_QUEUE_FAILED_RECORDS_ARN}
+          batchSize: 1
+  notifyDeadline:
+    timeout: 900
+    handler: src/listings/listingHandler.notifyDeadlineHandler
+    events:
+      - schedule: rate(1 day)
+  notifyNewListing:
+    timeout: 900
+    handler: src/listings/listingHandler.notifyNewListingHandler
+    events:
+      - schedule: rate(1 day)
+  resetPassword:
+    timeout: 30
+    handler: src/users/userHandler.resetPasswordHandler
+    events:
+      - http:
+          path: /${env:MODEL_KEY_USERS}/reset-password
+          method: post
+          cors: true
+  getConstants:
+    timeout: 30
+    handler: src/common-services/commonHandler.getConstantsHandler
+    events:
+      - http:
+          path: /common-services/constants
+          method: get
+          cors: true
+  preRenderApi:
+    timeout: 30
+    handler: src/common-services/commonHandler.preRenderApiHandler
+    events:
+      - http:
+          path: /common-services/pre-render-data
+          method: get
+          cors: true
+  getModelFields:
+    timeout: 30
+    handler: src/common-services/commonHandler.getModelFieldsHandler
+    events:
+      - http:
+          path: /common-services/fields/{type}/{model}
+          method: get
+          cors: true
+  preDeployApiHandler:
+    timeout: 30
+    handler: src/common-services/commonHandler.preDeployApiHandler
+    events:
+      - http:
+          path: /common-services/pre-deploy-data
+          method: get
+          cors: true
+  getLandingListings:
+    timeout: 30
+    handler: src/listings/listingHandler.getListingsForLanding
+    events:
+      - http:
+          path: /listings
+          method: get
+          cors: true
+  getRedisData:
+    timeout: 30
+    handler: src/common-services/commonHandler.getRedisData
+    events:
+      - http:
+          path: /common-services/redis/{key}
+          method: get
+          cors: true
+  exportApplicantsData:
+    timeout: 30
+    handler: src/applications/applicationHandler.exportApplicantsDataHandler
+    events:
+      - http:
+          path: /export/applicants/{listingId}
+          method: get
+          cors: true
+  exportApplicantsDataConsumer:
+    timeout: 900
+    handler: src/applications/applicationHandler.exportApplicantsDataConsumer
+    events:
+      - sqs:
+          arn: ${env:EXPORT_APPLICANTS_DATA_ARN}
+          batchSize: 1
+  getS3Link:
+    timeout: 30
+    handler: src/common-services/commonHandler.getS3Link
+    events:
+      - http:
+          path: /common-services/get/s3
+          method: post
+          cors: true
+  calendarEventCreate:
+    timeout: 30
+    handler: src/calendar/calendarHandler.createCalendarEventHandler
+    events:
+      - http:
+          path: /calendar/create
+          method: post
+          cors: true
+  calendarEventUpdate:
+    timeout: 30
+    handler: src/calendar/calendarHandler.updateCalendarEventHandler
+    events:
+      - http:
+          path: /calendar/update
+          method: post
+          cors: true
+  getCalendarEvents:
+    timeout: 30
+    handler: src/calendar/calendarHandler.getCalendarEvents
+    events:
+      - http:
+          path: /calendar
+          method: get
+          cors: true
+  getAnalyticsData:
+    timeout: 30
+    handler: src/common-services/commonHandler.getAnalyticsData
+    events:
+      - http:
+          path: /analysis
+          method: get
+          cors: true
